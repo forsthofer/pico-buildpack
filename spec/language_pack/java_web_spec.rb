@@ -15,7 +15,7 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
       Dir.mkdir("app")
       Dir.chdir(appdir) do
         Dir.mkdir("WEB-INF")
-        java_web_pack.stub(:download_tomcat) do
+        java_web_pack.stub(:download_virgo) do
           FileUtils.copy( File.expand_path("../../support/fake-tomcat.tar.gz", __FILE__), ".tomcat/tomcat.tar.gz")
         end
         java_web_pack.stub(:install_database_drivers)
@@ -93,7 +93,7 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
     end
 
     it "should create a .profile.d with proxy sys props, connector port, and heap size in JAVA_OPTS" do
-      java_web_pack.stub(:install_tomcat)
+      java_web_pack.stub(:install_virgo)
       java_web_pack.compile
       profiled = File.join(appdir,".profile.d","java.sh")
       File.exists?(profiled).should == true

@@ -5,78 +5,76 @@ require "fileutils"
 module LanguagePack
   class JavaWeb < Java
 
-    TOMCAT_URL =  "http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.37/bin/apache-tomcat-7.0.37.tar.gz".freeze
+    VIRGO_URL =  "https://dl.dropbox.com/u/2487064/virgo-tomcat-server-3.6.1.RELEASE.zip".freeze
     WEBAPP_DIR = "webapps/ROOT/".freeze
 
     def self.use?
-      File.exists?("WEB-INF/web.xml") || File.exists?("webapps/ROOT/WEB-INF/web.xml")
+      File.exists?("META-INF/MANIFEST.MF")
     end
 
     def name
-      "Java Web"
+      "Virgo Web"
     end
 
     def compile
       Dir.chdir(build_path) do
         install_java
-        install_tomcat
-        remove_tomcat_files
-        copy_webapp_to_tomcat
-        move_tomcat_to_root
-        install_database_drivers
-        #install_insight
+        install_virgo
+        remove_virgo_files
+        copy_webapp_to_virgo
+        move_virgo_to_root
         copy_resources
         setup_profiled
       end
     end
 
-    def install_tomcat
-      FileUtils.mkdir_p tomcat_dir
-      tomcat_tarball="#{tomcat_dir}/tomcat.tar.gz"
+    def install_virgo
+      FileUtils.mkdir_p virgo_dir
+      virgo_tarball="#{virgo_dir}/virgo.zip"
 
-      download_tomcat tomcat_tarball
+      download_virgo virgo_tarball
 
-      puts "Unpacking Tomcat to #{tomcat_dir}"
-      run_with_err_output("tar xzf #{tomcat_tarball} -C #{tomcat_dir} && mv #{tomcat_dir}/apache-tomcat*/* #{tomcat_dir} && " +
-              "rm -rf #{tomcat_dir}/apache-tomcat*")
-      FileUtils.rm_rf tomcat_tarball
-      unless File.exists?("#{tomcat_dir}/bin/catalina.sh")
-        puts "Unable to retrieve Tomcat"
+      puts "Unpacking Virgo to #{virgo_dir}"
+      run_with_err_output("tar xzf #{virgo_tarball} -C #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
+              "rm -rf #{virgo_dir}/virgo-*")
+      FileUtils.rm_rf virgo_tarball
+      unless File.exists?("#{virgo_dir}/bin/startup.sh")
+        puts "Unable to retrieve Virgo"
         exit 1
       end
     end
 
-    def download_tomcat(tomcat_tarball)
-      puts "Downloading Tomcat: #{TOMCAT_URL}"
-      run_with_err_output("curl --silent --location #{TOMCAT_URL} --output #{tomcat_tarball}")
+    def download_virgo(virgo_zip)
+      puts "Downloading Virgo: #{VIRGO_URL}"
+      run_with_err_output("curl --silent --location #{VIRGO_URL} --output #{virgo_zip}")
     end
 
-    def remove_tomcat_files
-      %w[NOTICE RELEASE-NOTES RUNNING.txt LICENSE temp/. webapps/. work/. logs].each do |file|
-        FileUtils.rm_rf("#{tomcat_dir}/#{file}")
+    def remove_virgo_files
+      %w[notice.html About*.* about_files epl-v10.html docs work/.].each do |file|
+        FileUtils.rm_rf("#{virgo_dir}/#{file}")
       end
     end
 
-    def tomcat_dir
-      ".tomcat"
+    def virgo_dir
+      ".virgo"
     end
 
-    def copy_webapp_to_tomcat
-      run_with_err_output("mkdir -p #{tomcat_dir}/webapps/ROOT && mv * #{tomcat_dir}/webapps/ROOT")
+    def copy_webapp_to_virgo
+      run_with_err_output("mv * #{virgo_dir}/pickup")
     end
 
-    def move_tomcat_to_root
-      run_with_err_output("mv #{tomcat_dir}/* . && rm -rf #{tomcat_dir}")
+    def move_virgo_to_root
+      run_with_err_output("mv #{virgo_dir}/* . && rm -rf #{virgo_dir}")
     end
 
     def copy_resources
       # Configure server.xml with variable HTTP port
-      run_with_err_output("cp -r #{File.expand_path('../../../resources/tomcat', __FILE__)}/* #{build_path}")
+      run_with_err_output("cp -r #{File.expand_path('../../../resources/virgo', __FILE__)}/* #{build_path}")
     end
 
     def java_opts
       # TODO proxy settings?
-      # Don't override Tomcat's temp dir setting
+      # Don't override Virgo's temp dir setting
       opts = super.merge({ "-Dhttp.port=" => "$VCAP_APP_PORT" })
       opts.delete("-Djava.io.tmpdir=")
       opts
@@ -84,12 +82,9 @@ module LanguagePack
 
     def default_process_types
       {
-        "web" => "./bin/catalina.sh run"
+        "web" => "./bin/startup.sh -clean"
       }
     end
 
-    def webapp_path
-      File.join(build_path,"webapps","ROOT")
-    end
   end
 end
