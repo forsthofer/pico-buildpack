@@ -5,6 +5,11 @@ A Heroku-style buildpack which supports Eclipse Virgo as a runtime container for
 
 [![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
 
+Acknowledgements
+----------------
+
+CloudFoundry buildpacks were modeled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).
+
 The Virgo buildpack was based on the [CloudFoundry Java buildpack](https://github.com/cloudfoundry/cloudfoundry-buildpack-java)
 which is described below.
 
@@ -17,22 +22,8 @@ Overview
 --------
 
 A buildpack knows how to detect and launch certain types of application on behalf of CloudFoundry.
-Each buildpack consists of a series of *language packs*, each of which knows how to detect and launch a specify
-type of application. The buildpack searches the language packs in order until it finds one which can handle the
-application, otherwise the buildpack gives up and is unable to handle the application.
 
 A buildpack is configured by specifying its git URL on the vmc push operation.
-
-Language Packs
---------------
-
-The following language packs are provided by the Java buildpack:
-
-* Play - support for web apps written to the [Play framework](http://www.playframework.com/)
-* Grails - a specialisation of the Spring language pack for [Grails](http://grails.org/) web apps
-* Spring - a specialisation of the JavaWeb language pack for web apps written to the
-[Spring framework](http://www.springsource.org/spring-framework)
-* JavaWeb - support for traditional Java web apps
 
 API
 ---
@@ -44,7 +35,16 @@ language pack for the application in the specified directory. Does not modify th
 # compile <app directory> <cache directory>: prepares the application for launching.
 # release: returns launch information and configuration in YAML format.
 
-Acknowledgement
----------------
 
-CloudFoundry buildpacks were modeled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).
+Language Packs
+--------------
+
+The Java buildpack consists of a series of so-called *language packs*, each of which knows how to detect and launch a specify
+type of application. The buildpack searches the language packs in order until it finds one which can handle the
+application, otherwise the buildpack gives up and is unable to handle the application.
+
+* Play - support for web apps written to the [Play framework](http://www.playframework.com/)
+* Grails - a specialisation of the Spring language pack for [Grails](http://grails.org/) web apps
+* Spring - a specialisation of the JavaWeb language pack for web apps written to the
+[Spring framework](http://www.springsource.org/spring-framework)
+* JavaWeb - support for traditional Java web apps
