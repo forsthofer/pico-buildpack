@@ -30,9 +30,8 @@ API
 
 A buildpack supports three operations (via corresponding scripts in the `bin` directory):
 
-# detect <app directory>: exits with status code 0 if and only if the buildpack has a suitable
-language pack for the application in the specified directory. Does not modify the specified directory.
-# compile <app directory> <cache directory>: prepares the application for launching.
+# detect <app directory>: exits with status code 0 if and only if the buildpack has a suitable language pack for the application in the specified directory. Does not modify the specified directory.
+# compile <app directory> <cache directory>: prepares the application droplet for launching.
 # release: returns launch information and configuration in YAML format.
 
 
