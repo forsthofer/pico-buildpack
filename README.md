@@ -5,11 +5,6 @@ A Heroku-style buildpack which supports Eclipse Virgo as a runtime container for
 
 [![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
 
-CloudFoundry Java Buildpack
-===========================
-
-Buildpack plugin for deploying exploded Java WAR files and certain other JVM applications.
-
 Overview
 --------
 
