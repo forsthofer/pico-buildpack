@@ -5,14 +5,6 @@ A Heroku-style buildpack which supports Eclipse Virgo as a runtime container for
 
 [![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
 
-Acknowledgements
-----------------
-
-CloudFoundry buildpacks were modeled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).
-
-The Virgo buildpack was based on the [CloudFoundry Java buildpack](https://github.com/cloudfoundry/cloudfoundry-buildpack-java)
-which is described below.
-
 CloudFoundry Java Buildpack
 ===========================
 
@@ -34,15 +26,9 @@ A buildpack supports three operations (via corresponding scripts in the `bin` di
 * compile <app directory> <cache directory>: prepares the application droplet for launching.
 * release: returns launch information and configuration in YAML format.
 
-Language Packs
---------------
+Acknowledgements
+----------------
 
-The Java buildpack consists of a series of so-called *language packs*, each of which knows how to detect and launch a specify
-type of application. The buildpack searches the language packs in order until it finds one which can handle the
-application, otherwise the buildpack gives up and is unable to handle the application.
+The Virgo buildpack was forked from [CloudFoundry Java buildpack](https://github.com/cloudfoundry/cloudfoundry-buildpack-java).
 
-* Play - support for web apps written to the [Play framework](http://www.playframework.com/)
-* Grails - a specialisation of the Spring language pack for [Grails](http://grails.org/) web apps
-* Spring - a specialisation of the JavaWeb language pack for web apps written to the
-[Spring framework](http://www.springsource.org/spring-framework)
-* JavaWeb - support for traditional Java web apps
+CloudFoundry buildpacks were modelled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).

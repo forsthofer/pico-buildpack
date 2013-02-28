@@ -76,12 +76,12 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
       File.exists?(web_xml).should == true
     end
 
-    it "should copy MySQL and Postgres drivers to Tomcat lib dir" do
-      java_web_pack.unstub(:install_database_drivers)
-      java_web_pack.compile
-      File.exists?(File.join(appdir,"lib","mysql-connector-java-5.1.12.jar")).should == true
-      File.exists?(File.join(appdir,"lib","postgresql-9.0-801.jdbc4.jar")).should == true
-    end
+    #it "should copy MySQL and Postgres drivers to Tomcat lib dir" do
+    #  java_web_pack.unstub(:install_database_drivers)
+    #  java_web_pack.compile
+    #  File.exists?(File.join(appdir,"lib","mysql-connector-java-5.1.12.jar")).should == true
+    #  File.exists?(File.join(appdir,"lib","postgresql-9.0-801.jdbc4.jar")).should == true
+    #end
 
 
     it "should unpack and configure Insight agent if Insight Rabbit service bound" do

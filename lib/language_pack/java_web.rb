@@ -1,11 +1,9 @@
 require "language_pack/java"
-require "language_pack/database_helpers"
 require "fileutils"
 
 # TODO logging
 module LanguagePack
   class JavaWeb < Java
-    include LanguagePack::DatabaseHelpers
 
     TOMCAT_URL =  "http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.37/bin/apache-tomcat-7.0.37.tar.gz".freeze
     WEBAPP_DIR = "webapps/ROOT/".freeze
