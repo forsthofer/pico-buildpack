@@ -62,7 +62,7 @@ describe LanguagePack::VirgoWeb, type: :with_temp_dir do
     it "should copy app to pickup" do
       java_web_pack.compile
 
-      manifest = File.join(appdir,"pickup", "META-INF", "MANIFEST.MF")
+      manifest = File.join(appdir,"pickup", "app.war", "META-INF", "MANIFEST.MF")
       File.exists?(manifest).should == true
     end
 

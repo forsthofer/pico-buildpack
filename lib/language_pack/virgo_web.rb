@@ -6,10 +6,10 @@ module LanguagePack
   class VirgoWeb < Java
 
     VIRGO_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-tomcat-server-3.6.1.RELEASE.zip".freeze
-    WEBAPP_DIR = "webapps/ROOT/".freeze
+    WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
-      File.exists?("META-INF/MANIFEST.MF")
+      File.exists?("META-INF/MANIFEST.MF") || File.exists?("pickup/app.war/META-INF/MANIFEST.MF")
     end
 
     def name
