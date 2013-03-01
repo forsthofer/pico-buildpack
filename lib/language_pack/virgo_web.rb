@@ -3,7 +3,7 @@ require "fileutils"
 
 # TODO logging
 module LanguagePack
-  class JavaWeb < Java
+  class VirgoWeb < Java
 
     VIRGO_URL =  "https://dl.dropbox.com/u/2487064/virgo-tomcat-server-3.6.1.RELEASE.zip".freeze
     WEBAPP_DIR = "webapps/ROOT/".freeze

@@ -1,13 +1,13 @@
 require "spec_helper"
 
-describe LanguagePack::JavaWeb, type: :with_temp_dir do
+describe LanguagePack::VirgoWeb, type: :with_temp_dir do
 
   attr_reader :tmpdir, :java_web_pack
 
   let(:appdir) { File.join(tmpdir, "app") }
 
   before do
-    @java_web_pack = LanguagePack::JavaWeb.new(appdir)
+    @java_web_pack = LanguagePack::VirgoWeb.new(appdir)
     # TODO pass in Mock
     @java_web_pack.stub(:install_java)
 
@@ -28,13 +28,13 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
     it "should be used if manifest present" do
       Dir.chdir(appdir) do
         FileUtils.touch "META-INF/MANIFEST.MF"
-        LanguagePack::JavaWeb.use?.should == true
+        LanguagePack::VirgoWeb.use?.should == true
       end
     end
 
     it "should not be used if no manifest" do
       Dir.chdir(appdir) do
-        LanguagePack::JavaWeb.use?.should == false
+        LanguagePack::VirgoWeb.use?.should == false
       end
     end
   end

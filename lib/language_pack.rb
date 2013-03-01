@@ -1,7 +1,7 @@
 require "pathname"
 require "language_pack/web_xml_config"
 require "language_pack/java"
-require "language_pack/java_web"
+require "language_pack/virgo_web"
 
 # General Language Pack module
 module LanguagePack
@@ -12,7 +12,7 @@ module LanguagePack
   def self.detect(*args)
     Dir.chdir(args.first)
 
-    pack = [ JavaWeb, Java ].detect do |klass|
+    pack = [ VirgoWeb, Java ].detect do |klass|
       klass.use?
     end
 
