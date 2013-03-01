@@ -50,8 +50,10 @@ module LanguagePack
     end
 
     def remove_virgo_files
-      %w[notice.html About*.* about_files epl-v10.html docs work/.].each do |file|
-        FileUtils.rm_rf("#{virgo_dir}/#{file}")
+      %w(notice.html epl-v10.html docs work [Aa]bout* pickup/org.eclipse.virgo.apps.*).each do |file|
+        Dir.glob("#{virgo_dir}/#{file}") do |entry|
+          FileUtils.rm_rf(entry)
+        end
       end
     end
 

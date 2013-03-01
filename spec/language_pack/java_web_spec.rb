@@ -14,9 +14,9 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
     Dir.chdir(tmpdir) do
       Dir.mkdir("app")
       Dir.chdir(appdir) do
-        Dir.mkdir("WEB-INF")
+        Dir.mkdir("META-INF")
         java_web_pack.stub(:download_virgo) do
-          FileUtils.copy( File.expand_path("../../support/fake-tomcat.tar.gz", __FILE__), ".tomcat/tomcat.tar.gz")
+          FileUtils.copy( File.expand_path("../../support/fake-virgo.zip", __FILE__), ".virgo/virgo.zip")
         end
         java_web_pack.stub(:install_database_drivers)
       end
@@ -25,22 +25,14 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
 
   describe "detect" do
 
-    it "should be used if web.xml present" do
+    it "should be used if manifest present" do
       Dir.chdir(appdir) do
-        FileUtils.touch "WEB-INF/web.xml"
+        FileUtils.touch "META-INF/MANIFEST.MF"
         LanguagePack::JavaWeb.use?.should == true
       end
     end
 
-    it "should be used if web.xml is present in installed Tomcat dir" do
-      Dir.chdir(appdir) do
-        FileUtils.mkdir_p("webapps/ROOT/WEB-INF")
-        FileUtils.touch "webapps/ROOT/WEB-INF/web.xml"
-        LanguagePack::JavaWeb.use?.should == true
-      end
-    end
-
-    it "should not be used if no web.xml" do
+    it "should not be used if no manifest" do
       Dir.chdir(appdir) do
         LanguagePack::JavaWeb.use?.should == false
       end
@@ -50,46 +42,28 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
   describe "compile" do
 
     before do
-      FileUtils.touch "#{appdir}/WEB-INF/web.xml"
+      FileUtils.touch "#{appdir}/META-INF/MANIFEST.MF"
     end
 
-    it "should download and unpack Tomcat to root directory" do
+    it "should download and unpack Virgo to root directory" do
       java_web_pack.compile
-      File.exists?(File.join(appdir, "bin", "catalina.sh")).should == true
+      File.exists?(File.join(appdir, "bin", "startup.sh")).should == true
     end
 
-    it "should remove specified Tomcat files" do
+    it "should remove specified Virgo files" do
       java_web_pack.compile
-      File.exists?(File.join(appdir, "LICENSE")).should == false
-      Dir.chdir(File.join(appdir, "webapps")) do
-        Dir.glob("*").should == ["ROOT"]
-      end
-      Dir.chdir(File.join(appdir, "temp")) do
-        Dir.glob("*").empty?.should == true
+      %w[About.html about_files docs AboutKernel.html epl-v10.html AboutNano.html notice.html pickup/org.eclipse.virgo.apps.fake.jar].each do |file|
+        if File.exists?(File.join(appdir, file))
+          fail sprintf("%s was not removed", file)
+        end
       end
     end
 
-    it "should copy app to webapp ROOT" do
+    it "should copy app to pickup" do
       java_web_pack.compile
 
-      web_xml = File.join(appdir,"webapps","ROOT", "WEB-INF", "web.xml")
-      File.exists?(web_xml).should == true
-    end
-
-    #it "should copy MySQL and Postgres drivers to Tomcat lib dir" do
-    #  java_web_pack.unstub(:install_database_drivers)
-    #  java_web_pack.compile
-    #  File.exists?(File.join(appdir,"lib","mysql-connector-java-5.1.12.jar")).should == true
-    #  File.exists?(File.join(appdir,"lib","postgresql-9.0-801.jdbc4.jar")).should == true
-    #end
-
-
-    it "should unpack and configure Insight agent if Insight Rabbit service bound" do
-
-    end
-
-    it "should not unpack and configure Insight agent if Insight Rabbit service not bound" do
-
+      manifest = File.join(appdir,"pickup", "META-INF", "MANIFEST.MF")
+      File.exists?(manifest).should == true
     end
 
     it "should create a .profile.d with proxy sys props, connector port, and heap size in JAVA_OPTS" do
@@ -104,20 +78,20 @@ describe LanguagePack::JavaWeb, type: :with_temp_dir do
       script.should_not include("-Djava.io.tmpdir=$TMPDIR")
     end
 
-    it "should add template server.xml to Tomcat for configuration of web port" do
+    it "should add template tomcat-server.xml to Virgo for configuration of web port" do
       java_web_pack.compile
-      server_xml = File.join(appdir,"conf","server.xml")
+      server_xml = File.join(appdir,"configuration","tomcat-server.xml")
       File.exists?(server_xml).should == true
       File.read(server_xml).should include("http.port")
     end
   end
 
   describe "release" do
-    it "should return the Tomcat start script as default web process" do
+    it "should return the Virgo start script as default web process" do
       java_web_pack.release.should == {
           "addons" => [],
           "config_vars" => {},
-          "default_process_types" => { "web" => "./bin/catalina.sh run" }
+          "default_process_types" => { "web" => "./bin/startup.sh -clean" }
       }.to_yaml
     end
   end
