@@ -30,14 +30,14 @@ module LanguagePack
 
     def install_virgo
       FileUtils.mkdir_p virgo_dir
-      virgo_tarball="#{virgo_dir}/virgo.zip"
+      virgo_zip="#{virgo_dir}/virgo.zip"
 
-      download_virgo virgo_tarball
+      download_virgo virgo_zip
 
       puts "Unpacking Virgo to #{virgo_dir}"
-      run_with_err_output("tar xzf #{virgo_tarball} -C #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
+      run_with_err_output("unzip #{virgo_zip} -d #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
               "rm -rf #{virgo_dir}/virgo-*")
-      FileUtils.rm_rf virgo_tarball
+      FileUtils.rm_rf virgo_zip
       unless File.exists?("#{virgo_dir}/bin/startup.sh")
         puts "Unable to retrieve Virgo"
         exit 1
