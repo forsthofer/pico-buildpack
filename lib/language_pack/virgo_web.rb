@@ -62,8 +62,8 @@ module LanguagePack
     end
 
     def copy_webapp_to_virgo
-      FileUtils.mkdir_p "#{virgo_dir}/pickup/app.war"
-      run_with_err_output("mv * #{virgo_dir}/pickup/app.war")
+      FileUtils.mkdir_p "#{virgo_dir}/pickup/app.war/"
+      run_with_err_output("mv * #{virgo_dir}/pickup/app.war/.")
     end
 
     def move_virgo_to_root
