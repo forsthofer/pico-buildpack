@@ -5,7 +5,7 @@ require "fileutils"
 module LanguagePack
   class VirgoWeb < Java
 
-    VIRGO_URL =  "https://dl.dropbox.com/u/2487064/virgo-tomcat-server-3.6.1.RELEASE.zip".freeze
+    VIRGO_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-tomcat-server-3.6.1.RELEASE.zip".freeze
     WEBAPP_DIR = "webapps/ROOT/".freeze
 
     def self.use?
