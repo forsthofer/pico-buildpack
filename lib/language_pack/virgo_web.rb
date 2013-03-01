@@ -9,7 +9,8 @@ module LanguagePack
     WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
-      File.exists?("META-INF/MANIFEST.MF") || File.exists?("pickup/app.war/META-INF/MANIFEST.MF")
+      # Test for manifest in either original or compiled location
+      File.exists?("META-INF/MANIFEST.MF") || File.exists?("#{WEBAPP_DIR}META-INF/MANIFEST.MF")
     end
 
     def name
@@ -62,8 +63,8 @@ module LanguagePack
     end
 
     def copy_webapp_to_virgo
-      FileUtils.mkdir_p "#{virgo_dir}/pickup/app.war/"
-      run_with_err_output("mv * #{virgo_dir}/pickup/app.war/.")
+      FileUtils.mkdir_p "#{virgo_dir}/#{WEBAPP_DIR}"
+      run_with_err_output("mv * #{virgo_dir}/#{WEBAPP_DIR}.")
     end
 
     def move_virgo_to_root
