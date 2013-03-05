@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-if ENV['port']
+if ENV['PORT']
   puts 'Heroku detected'
   puts `gem install bundler`
   gem_file = File.expand_path(File.join(File.dirname(__FILE__), "../Gemfile"))
