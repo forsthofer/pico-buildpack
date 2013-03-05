@@ -39,7 +39,7 @@ module LanguagePack
       download_virgo virgo_zip
 
       puts "Unpacking Virgo to #{virgo_dir}"
-      run_with_err_output("unzip #{virgo_zip} -d #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
+      run_with_err_output("gunzip #{virgo_zip} -d #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
               "rm -rf #{virgo_dir}/virgo-*")
       FileUtils.rm_rf virgo_zip
       unless File.exists?("#{virgo_dir}/bin/startup.sh")
