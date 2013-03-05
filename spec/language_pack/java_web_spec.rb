@@ -16,7 +16,7 @@ describe LanguagePack::VirgoWeb, type: :with_temp_dir do
       Dir.chdir(appdir) do
         Dir.mkdir("META-INF")
         java_web_pack.stub(:download_virgo) do
-          FileUtils.copy( File.expand_path("../../support/fake-virgo.zip", __FILE__), ".virgo/virgo.zip")
+          FileUtils.copy( File.expand_path("../../support/fake-virgo.tar.gz", __FILE__), ".virgo/virgo.tar.gz")
         end
         java_web_pack.stub(:install_database_drivers)
       end
