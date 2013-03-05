@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+puts `set`
 if ENV['PORT']
   puts 'Heroku detected'
   puts `gem install bundler`
@@ -8,6 +9,8 @@ if ENV['PORT']
 else
 	puts 'Heroku not detected'
 end
+
+exit 99
 
 # sync output
 $stdout.sync = true
