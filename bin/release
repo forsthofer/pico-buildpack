@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+puts PORT=ENV[PORT]
+
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
 
