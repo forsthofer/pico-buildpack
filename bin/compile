@@ -1,26 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
-puts `set`
-if ENV['PORT']
-  puts 'Heroku detected'
-  puts `gem install bundler`
-  gem_file = File.expand_path(File.join(File.dirname(__FILE__), "../Gemfile"))
-  puts `bundle install --gemfile=#{gem_file}`
-else
-	puts 'Heroku not detected'
-end
-
-exit 99
-
-# sync output
-$stdout.sync = true
-
-$:.unshift File.expand_path("../../lib", __FILE__)
-require "language_pack"
-
-if pack = LanguagePack.detect(ARGV[0], ARGV[1])
-  #TODO re-enable?
-  #pack.log("compile") do
-    pack.compile
-  #end
-end
+echo compile PORT="$PORT"
+exit 0

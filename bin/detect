@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 
-echo PORT="$PORT"
+echo detect PORT="$PORT"
 echo "Virgo web"
 exit 0
