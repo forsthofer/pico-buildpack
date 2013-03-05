@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-port = ENV[PORT]
+port = ENV['PORT']
 puts "PORT=#{port}"
 
 $:.unshift File.expand_path("../../lib", __FILE__)
