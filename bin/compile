@@ -5,6 +5,8 @@ if ENV['PORT']
   puts `gem install bundler`
   gem_file = File.expand_path(File.join(File.dirname(__FILE__), "../Gemfile"))
   puts `bundle install --gemfile=#{gem_file}`
+else
+	puts 'Heroku not detected'
 end
 
 # sync output
