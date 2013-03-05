@@ -1,12 +1,6 @@
-#!/usr/bin/env ruby
-
-$:.unshift File.expand_path("../../lib", __FILE__)
-require "language_pack"
-
-if pack = LanguagePack.detect(ARGV.first)
-  puts pack.name
-  exit 0
-else
-  puts "no"
-  exit 1
-end
+#!/usr/bin/env bash
+SCRIPTDIR=$(cd "$( dirname "$0" )" && pwd)
+gem install nokogiri --user-install
+export PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+ruby $SCRIPTDIR/detect.rb $1 $2
+exit $?
