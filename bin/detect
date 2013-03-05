@@ -3,4 +3,4 @@ SCRIPTDIR=$(cd "$( dirname "$0" )" && pwd)
 gem install nokogiri --user-install
 export PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 ruby $SCRIPTDIR/detect.rb $1 $2
-exit $?
+exit 0
