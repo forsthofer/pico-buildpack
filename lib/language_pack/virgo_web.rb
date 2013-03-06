@@ -9,10 +9,10 @@ module LanguagePack
     WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
-      $stderr.puts "VirgoWeb self?.use entered"
+      puts "VirgoWeb self?.use entered"
       # Test for manifest in either original or compiled location
       result = File.exists?("META-INF/MANIFEST.MF") || File.exists?("#{WEBAPP_DIR}META-INF/MANIFEST.MF")
-      $stderr.puts "VirgoWeb self?.use exiting"
+      puts "VirgoWeb self?.use exiting"
       result
     end
 
@@ -21,6 +21,7 @@ module LanguagePack
     end
 
     def compile
+      puts "VirgoWeb compile entered"
       Dir.chdir(build_path) do
         install_java
         install_virgo
@@ -30,6 +31,7 @@ module LanguagePack
         copy_resources
         setup_profiled
       end
+      puts "VirgoWeb compile exiting"
     end
 
     def install_virgo
