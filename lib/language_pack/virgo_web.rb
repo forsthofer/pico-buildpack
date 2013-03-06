@@ -9,11 +9,8 @@ module LanguagePack
     WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
-      puts "VirgoWeb self?.use entered"
       # Test for manifest in either original or compiled location
-      result = File.exists?("META-INF/MANIFEST.MF") || File.exists?("#{WEBAPP_DIR}META-INF/MANIFEST.MF")
-      puts "VirgoWeb self?.use exiting"
-      result
+      File.exists?("META-INF/MANIFEST.MF") || File.exists?("#{WEBAPP_DIR}META-INF/MANIFEST.MF")
     end
 
     def name
