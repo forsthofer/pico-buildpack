@@ -85,14 +85,11 @@ module LanguagePack
     end
 
     def release
-      puts "Java release entered"
-      result = {
+      {
           "addons" => [],
           "config_vars" => {},
           "default_process_types" => default_process_types
       }.to_yaml
-      puts "Java release returning: #{result}"
-      result
     end
 
     def default_process_types
