@@ -38,8 +38,7 @@ module LanguagePack
       download_virgo virgo_tarball
 
       puts "Unpacking Virgo to #{virgo_dir}"
-      run_with_err_output("tar pxzf #{virgo_tarball} -C #{virgo_dir} && mv #{virgo_dir}/virgo-*/* #{virgo_dir} && " +
-              "rm -rf #{virgo_dir}/virgo-*")
+      run_with_err_output("tar pxzf #{virgo_tarball} -C #{virgo_dir}")
       FileUtils.rm_rf virgo_tarball
       unless File.exists?("#{virgo_dir}/bin/startup.sh")
         puts "Unable to retrieve Virgo"
