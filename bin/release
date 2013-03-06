@@ -6,6 +6,4 @@ if ! gem list nokogiri -i >/dev/null 2>&1; then
   export PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 fi
 ruby $SCRIPTDIR/release.rb $1 $2
-RC=$?
-echo "Exiting release bash script: " $RC
-exit $RC
+exit $?
