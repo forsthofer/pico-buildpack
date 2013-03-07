@@ -18,7 +18,6 @@ module LanguagePack
     end
 
     def compile
-      puts "VirgoWeb compile entered"
       Dir.chdir(build_path) do
         install_java
         install_virgo
@@ -28,7 +27,6 @@ module LanguagePack
         copy_resources
         setup_profiled
       end
-      puts "VirgoWeb compile exiting"
     end
 
     def install_virgo
@@ -37,7 +35,6 @@ module LanguagePack
 
       download_virgo virgo_tarball
 
-      puts "Unpacking Virgo to #{virgo_dir}"
       run_with_err_output("tar pxzf #{virgo_tarball} -C #{virgo_dir}")
       FileUtils.rm_rf virgo_tarball
       unless File.exists?("#{virgo_dir}/bin/startup.sh")
@@ -47,7 +44,6 @@ module LanguagePack
     end
 
     def download_virgo(virgo_zip)
-      puts "Downloading Virgo: #{VIRGO_URL}"
       run_with_err_output("curl --silent --location #{VIRGO_URL} --output #{virgo_zip}")
     end
 
