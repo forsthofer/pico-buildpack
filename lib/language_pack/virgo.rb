@@ -1,5 +1,8 @@
 module LanguagePack
   class Virgo < Java
+
+    VIRGO_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-tomcat-server-3.6.1.RELEASE.tar.gz".freeze
+
     def compile
       Dir.chdir(build_path) do
         install_java

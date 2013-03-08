@@ -4,7 +4,6 @@ require "fileutils"
 module LanguagePack
   class VirgoWeb < Virgo
 
-    VIRGO_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-tomcat-server-3.6.1.RELEASE.tar.gz".freeze
     WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
