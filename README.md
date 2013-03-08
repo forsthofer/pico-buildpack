@@ -24,6 +24,15 @@ Issue `vmc push` from a directory containing the unpacked application. See the `
 
 This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
 
+###Virgo Overlay
+
+The application consists of one or more Virgo artefacts in a directory named `pickup`.
+If the artefact has any additional dependencies, these should be stored in a directory named `repository/usr`.
+
+Issue `vmc push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory.
+
+This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
+
 API
 ---
 
