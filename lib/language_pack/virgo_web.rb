@@ -16,7 +16,7 @@ module LanguagePack
       "Virgo Web"
     end
 
-    def copy_webapp_to_virgo
+    def move_to_virgo
       FileUtils.mkdir_p "#{virgo_dir}/#{WEBAPP_DIR}"
       run_with_err_output("mv * #{virgo_dir}/#{WEBAPP_DIR}.")
     end

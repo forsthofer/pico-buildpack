@@ -6,7 +6,7 @@ module LanguagePack
         install_virgo
         remove_virgo_files
         copy_resources
-        copy_webapp_to_virgo
+        move_to_virgo
         move_virgo_to_root
         setup_profiled
       end
