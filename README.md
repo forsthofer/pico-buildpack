@@ -1,16 +1,16 @@
 Virgo Buildpack
 ===============
 
-A CloudFoundry buildpack which supports Eclipse Virgo as a runtime container.
+A CloudFoundry buildpack which supports [Eclipse Virgo](http://www.eclipse.org/virgo/) as a runtime container.
 
 [![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
 
 Overview
 --------
 
-A buildpack knows how to detect and launch certain types of application on behalf of CloudFoundry.
+The buildpack knows how to detect and launch certain types of applications (described below) in Virgo.
 
-A buildpack is configured by specifying its git URL on the `vmc push` operation, thus:
+The buildpack is configured by specifying its git URL on the `vmc push` operation, thus:
 
     vmc push <appname> --buildpack=git://github.com/glyn/virgo-buildpack.git
 
@@ -18,18 +18,19 @@ Application Types
 -----------------
 ###Virgo Web
 
-The application is a single unpacked WAR or OSGi Web Application Bundle containing the file `META-INF/MANIFEST.MF`.
+The application is a single web application and is detected by the presence of the file `META-INF/MANIFEST.MF`. The application may be a conventional WAR file or an OSGi Web Application Bundle.
 
-Issue `vmc push` from a directory containing the unpacked application. See the `snifftest` directory for a trivial example application.
+Issue `vmc push` from a directory containing the unpacked web application. See the `snifftest` directory for a trivial example application.
 
 This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
 
 ###Virgo Overlay
 
-The application consists of one or more Virgo artefacts in a directory named `pickup`.
-If the artefact has any additional dependencies, these should be stored in a directory named `repository/usr`.
+The application consists of one or more Virgo artefacts in a directory named `pickup`. Virgo artefacts include WAR files, OSGi Web Application Bundles, plans, and PAR files. See the [Virgo Programmer Guide](http://www.eclipse.org/virgo/documentation/) for more information about these artefact types.
 
-Issue `vmc push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory.
+If the artefacts have any dependencies not met by Virgo, the dependency bundles should be stored in a directory named `repository/usr`.
+
+Issue `vmc push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory. See the `overlay-sample` directory for a trivial example application.
 
 This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
 
