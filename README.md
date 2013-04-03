@@ -14,6 +14,11 @@ The buildpack is configured by specifying its git URL on the `vmc push` operatio
 
     vmc push <appname> --buildpack=git://github.com/glyn/virgo-buildpack.git
 
+Important
+---------
+
+The buildpack currently enables the Virgo web admin console which should not be enabled in general. See [issue 1](https://github.com/glyn/virgo-buildpack/issues/1).
+
 Application Types
 -----------------
 ###Virgo Web
@@ -22,7 +27,7 @@ The application is a single web application and is detected by the presence of t
 
 Issue `vmc push` from a directory containing the unpacked web application. See the `snifftest` directory for a trivial example application.
 
-This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
+This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container. [Issue 2](https://github.com/glyn/virgo-buildpack/issues/1) covers launching Virgo Nano Web instead.
 
 ###Virgo Overlay
 
