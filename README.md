@@ -14,11 +14,6 @@ The buildpack is configured by specifying its git URL on the `vmc push` operatio
 
     vmc push <appname> --buildpack=git://github.com/glyn/virgo-buildpack.git
 
-Important
----------
-
-The buildpack currently enables the Virgo web admin console which should not be enabled in general. See [issue 1](https://github.com/glyn/virgo-buildpack/issues/1).
-
 Application Types
 -----------------
 ###Virgo Web
