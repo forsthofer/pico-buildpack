@@ -22,7 +22,7 @@ The application is a single web application and is detected by the presence of t
 
 Issue `vmc push` from a directory containing the unpacked web application. See the `snifftest` directory for a trivial example application.
 
-This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container. [Issue 2](https://github.com/glyn/virgo-buildpack/issues/1) covers launching Virgo Nano Web instead.
+This type of application causes Virgo Nano Web to be launched as the runtime container.
 
 ###Virgo Overlay
 
