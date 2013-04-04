@@ -55,7 +55,7 @@ describe LanguagePack::VirgoOverlay, type: :with_temp_dir do
 
     it "should remove specified Virgo files" do
       java_overlay_pack.compile
-      %w[About.html about_files docs AboutKernel.html epl-v10.html AboutNano.html notice.html pickup/org.eclipse.virgo.apps.fake.jar].each do |file|
+      %w[About.html about_files docs AboutKernel.html epl-v10.html AboutNano.html notice.html pickup/org.eclipse.virgo.apps.fake.jar pickup/org.eclipse.virgo.management.console.fake.jar].each do |file|
         if File.exists?(File.join(appdir, file))
           fail sprintf("%s was not removed", file)
         end
