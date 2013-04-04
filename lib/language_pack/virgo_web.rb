@@ -4,7 +4,7 @@ require "fileutils"
 module LanguagePack
   class VirgoWeb < Virgo
 
-    VIRGO_NAN_WEB_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-nano-full-3.6.1.RELEASE.tar.gz".freeze
+    VIRGO_NANO_WEB_URL =  "http://virgo.eclipse.org.s3.amazonaws.com/virgo-nano-full-3.6.1.RELEASE.tar.gz".freeze
     WEBAPP_DIR = "pickup/app.war/".freeze
 
     def self.use?
