@@ -46,6 +46,6 @@ A buildpack supports three operations (via corresponding scripts in the `bin` di
 Acknowledgements
 ----------------
 
-The Virgo buildpack was forked from [CloudFoundry Java buildpack](https://github.com/cloudfoundry/cloudfoundry-buildpack-java).
+The Virgo buildpack was forked from the [CloudFoundry Java buildpack](https://github.com/cloudfoundry/cloudfoundry-buildpack-java).
 
 CloudFoundry buildpacks were modelled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).
