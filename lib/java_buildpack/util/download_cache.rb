@@ -66,11 +66,14 @@ module JavaBuildpack::Util
         lock_file.flock(File::LOCK_EX)
 
         internet_up, file_downloaded = DownloadCache.internet_available?(filenames, uri, @logger)
+        @logger.debug { "internet_up=#{internet_up}, file_downloaded=#{file_downloaded}" }
 
         unless file_downloaded
           if internet_up && should_update(filenames)
+            @logger.debug { "update(#{filenames}, #{uri})" }
             update(filenames, uri)
           elsif should_download(filenames)
+            @logger.debug { "download(#{filenames}, #{SecurityError}, #{internet_up})" }
             download(filenames, uri, internet_up)
           end
         end
@@ -253,10 +256,14 @@ module JavaBuildpack::Util
     end
 
     def should_download(filenames)
+      @logger.debug { "File.exists?(#{filenames[:cached]})=#{File.exists?(filenames[:cached])}" }
       !File.exists?(filenames[:cached])
     end
 
     def should_update(filenames)
+      @logger.debug { "File.exists?(#{filenames[:cached]})=#{File.exists?(filenames[:cached])}" }
+      @logger.debug { "File.exists?(#{filenames[:etag]})=#{File.exists?(filenames[:etag])}" }
+      @logger.debug { "File.exists?(#{filenames[:last_modified]})=#{File.exists?(filenames[:last_modified])}" }
       File.exists?(filenames[:cached]) && (File.exists?(filenames[:etag]) || File.exists?(filenames[:last_modified]))
     end
 

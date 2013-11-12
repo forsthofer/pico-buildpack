@@ -21,6 +21,7 @@ containers:
   - "JavaBuildpack::Container::Play"
   - "JavaBuildpack::Container::SpringBootCli"
   - "JavaBuildpack::Container::Tomcat"
+  - "JavaBuildpack::Container::Virgo"
 jres:
   - "JavaBuildpack::Jre::OpenJdk"
 frameworks:

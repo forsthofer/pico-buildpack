@@ -32,7 +32,9 @@ module JavaBuildpack::Repository
     def initialize(repository_root)
       @index = {}
       @logger = JavaBuildpack::Diagnostics::LoggerFactory.get_logger
+      @logger.debug { "#{canonical repository_root}#{INDEX_PATH}" }
       JavaBuildpack::Util::DownloadCache.new.get("#{canonical repository_root}#{INDEX_PATH}") do |file| # TODO: Use global cache #50175265
+        @logger.debug { file }
         index_content = YAML.load_file(file)
         @logger.debug { index_content }
         @index.merge! index_content
