@@ -2,10 +2,46 @@
 
 This is a [Cloud Foundry][] buildpack for running [Eclipse Virgo](http://www.eclipse.org/virgo/) applications. It is a fork of the Cloud Foundry [Java Buildpack](https://github.com/cloudfoundry/java-buildpack).
 
+[![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
+
 ## Usage
 To use this buildpack specify the URI of the repository when pushing an application to Cloud Foundry:
 
     cf push --buildpack https://github.com/glyn/java-buildpack-new
+
+## Overview
+
+The buildpack knows how to detect and launch certain types of applications (described below) in Virgo.
+
+The buildpack is configured by specifying its git URL on the `vmc push` operation, thus:
+
+    vmc push <appname> --buildpack=git://github.com/glyn/virgo-buildpack.git
+
+### Application Types
+
+###Virgo Overlay
+
+The application consists of one or more Virgo artefacts in a directory named `pickup`. Virgo artefacts include WAR files, OSGi Web Application Bundles, plans, and PAR files. See the [Virgo Programmer Guide](http://www.eclipse.org/virgo/documentation/) for more information about these artefact types.
+
+If the artefacts have any dependencies not met by Virgo, the dependency bundles should be stored in a directory named `repository/usr`.
+
+Issue `cf push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory. See the `overlay-sample` directory for a trivial example application (with servlet configured at `<URL>/nospring`).
+
+This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
+
+## API
+
+A buildpack supports three operations (via corresponding scripts in the `bin` directory):
+
+* `detect <app directory>`: prints the application type to standard output and exits with status code 0 if and only if the buildpack can handle the application in the specified directory. Does not modify the specified directory.
+* `compile <app directory> <cache directory>`: prepares a droplet for launching the application.
+* `release <app directory>`: prints launch information and configuration to standard output in YAML format.
+
+## Acknowledgements
+
+The Virgo buildpack was forked from the [CloudFoundry Java buildpack](https://github.com/cloudfoundry/java-buildpack) from which the remaining sections of this documentation derive.
+
+CloudFoundry buildpacks were modelled on [Heroku buildpacks](https://devcenter.heroku.com/articles/buildpacks).
 
 ## Configuration and Extension
 The buildpack supports configuration and extension through the use of Git repository forking.  The easiest way to accomplish this is to use [GitHub's forking functionality][] to create a copy of this repository.  Make the required configuration and extension changes in the copy of the repository.  Then specify the URL of the new repository when pushing Cloud Foundry applications.  If the modifications are generally applicable to the Cloud Foundry community, please submit a [pull request][] with the changes.
@@ -61,7 +97,7 @@ bundle install --gemfile Gemfile.rubymine-debug
 [Pull requests][] are welcome; see the [contributor guidelines][] for details.
 
 ## License
-The Tomcat Builder is released under version 2.0 of the [Apache License][].
+This buildpack is released under version 2.0 of the [Apache License][].
 
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
 [Cloud Foundry]: http://www.cloudfoundry.com

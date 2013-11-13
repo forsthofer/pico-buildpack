@@ -1,0 +1,9 @@
+---
+applications:
+- name: virgo-nospring
+  memory: 512M
+  instances: 1
+  subdomain: virgo-nospring-${random-word}
+  domain: cfapps.io
+  path: .
+  buildpack: https://github.com/glyn/virgo-buildpack
