@@ -1,7 +1,7 @@
 ---
 applications:
 - name: virgo-nospring
-  memory: 512M
+  memory: 768M
   instances: 1
   subdomain: virgo-nospring-${random-word}
   domain: cfapps.io

@@ -28,7 +28,7 @@ See the `overlay-sample` directory for a trivial example application. You can pu
     cd overlay-sample
     cf push
 
-The push uses the settings in `manifest.yml`. The servlet appears at `<application URL>/nospring`. 
+The push uses the settings in `manifest.yml`. The servlet appears at `<application URL>/nospring`. Note that the "Admin Console" link will be broken since the admin console is deleted by the buildpack for security reasons.
 
 ## API
 
