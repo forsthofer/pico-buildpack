@@ -28,5 +28,5 @@ The container can be configured by modifying the [`config/virgo.yml`][] file.  T
 [Configuration and Extension]: ../README.md#Configuration-and-Extension
 [`config/virgo.yml`]: ../config/virgo.yml
 [repositories]: util-repositories.md
-[this listing]: http://download.pivotal.io.s3.amazonaws.com/virgo/index.yml
+[this listing]: http://virgo.eclipse.org.s3.amazonaws.com/index.yml
 [version syntax]: util-repositories.md#version-syntax-and-ordering
