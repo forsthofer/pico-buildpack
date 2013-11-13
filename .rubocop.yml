@@ -3,7 +3,7 @@ AllCops:
   Excludes:
     - vendor/**
 ClassLength:
-  Max: 200
+  Max: 400
 ClassVars:
   Enabled: false
 CyclomaticComplexity:
