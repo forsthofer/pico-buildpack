@@ -1,6 +1,6 @@
 # Eclipse Virgo buildpack
 
-This is a [Cloud Foundry][] buildpack for running [Eclipse Virgo](http://www.eclipse.org/virgo/) applications. It is a fork of the Cloud Foundry [Java Buildpack](https://github.com/cloudfoundry/java-buildpack).
+This is a [Cloud Foundry][] buildpack for running [Eclipse Virgo](http://www.eclipse.org/virgo/) applications. It is a fork of the Cloud Foundry [Java Buildpack](https://github.com/cloudfoundry/java-buildpack). The buildpack knows how to detect and launch certain types of applications (described below) in Virgo.
 
 [![Build Status](https://travis-ci.org/glyn/virgo-buildpack.png)](https://travis-ci.org/glyn/virgo-buildpack)
 
@@ -9,25 +9,26 @@ To use this buildpack specify the URI of the repository when pushing an applicat
 
     cf push --buildpack https://github.com/glyn/java-buildpack-new
 
-## Overview
+## Application Types
 
-The buildpack knows how to detect and launch certain types of applications (described below) in Virgo.
+Currently only one type of application is supported.
 
-The buildpack is configured by specifying its git URL on the `vmc push` operation, thus:
-
-    vmc push <appname> --buildpack=git://github.com/glyn/virgo-buildpack.git
-
-### Application Types
-
-###Virgo Overlay
+### Virgo Overlay
 
 The application consists of one or more Virgo artefacts in a directory named `pickup`. Virgo artefacts include WAR files, OSGi Web Application Bundles, plans, and PAR files. See the [Virgo Programmer Guide](http://www.eclipse.org/virgo/documentation/) for more information about these artefact types.
 
 If the artefacts have any dependencies not met by Virgo, the dependency bundles should be stored in a directory named `repository/usr`.
 
-Issue `cf push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory. See the `overlay-sample` directory for a trivial example application (with servlet configured at `<URL>/nospring`).
+Issue `cf push` from a directory containing a `pickup` directory and, optionally, a `repository/usr` directory.
 
 This type of application causes Virgo Server for Apache Tomcat to be launched as the runtime container.
+
+See the `overlay-sample` directory for a trivial example application. You can push this as follows:
+
+    cd overlay-sample
+    cf push
+
+The push uses the settings in `manifest.yml`. The servlet appears at `<application URL>/nospring`. 
 
 ## API
 
