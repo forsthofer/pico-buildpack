@@ -39,10 +39,12 @@ module JavaBuildpack::Container
       end
     end
 
+    # Detects if Virgo could perhaps run the application.
     def detect
       @virgo_version ? [virgo_id(@virgo_version)] : nil
     end
 
+    # Creates a droplet from the application.
     def compile
       download_zip virgo_home
       clear_pickup
@@ -52,6 +54,7 @@ module JavaBuildpack::Container
       link_libs
     end
 
+    # Describes how to run the droplet.
     def release
       @java_opts << "-D#{KEY_HTTP_PORT}=$PORT"
 
