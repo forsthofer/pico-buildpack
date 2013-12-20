@@ -3,12 +3,11 @@
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
-        <option name="PARENTHESES_AROUND_METHOD_ARGUMENTS" value="false" />
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
         <codeStyleSettings language="ruby">
-          <option name="INDENT_WHEN_CASES" value="false" />
+          <option name="ALIGN_GROUP_FIELD_DECLARATIONS" value="true" />
           <option name="SPACE_WITHIN_BRACES" value="true" />
         </codeStyleSettings>
       </value>
