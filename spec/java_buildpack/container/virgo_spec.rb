@@ -15,116 +15,73 @@
 # limitations under the License.
 
 require 'spec_helper'
+require 'component_helper'
 require 'fileutils'
-require 'java_buildpack/application'
+require 'java_buildpack/repository/configured_item'
+require 'java_buildpack/util/tokenized_version'
 require 'java_buildpack/container/virgo'
+require 'logging_helper'
 
-module JavaBuildpack::Container
+describe JavaBuildpack::Container::Virgo do
+  include_context 'component_helper'
+  include_context 'logging_helper'
 
-  describe Virgo do
+  it 'should detect pickup',
+     app_fixture: 'container_virgo' do
 
-    VIRGO_VERSION = JavaBuildpack::Util::TokenizedVersion.new('3.6.1_RELEASE')
+    detected = component.detect
 
-    VIRGO_DETAILS = [VIRGO_VERSION, 'test-virgo-uri']
+    expect(detected).to include("virgo=#{version}")
+  end
 
-    let(:application_cache) { double('ApplicationCache') }
+  it 'should not detect when pickup is absent',
+     app_fixture: 'container_main' do
+
+    detected = component.detect
+
+    expect(detected).to be_nil
+  end
+
+  it 'should extract Java from a GZipped TAR',
+     app_fixture:   'container_virgo',
+     cache_fixture: 'stub-virgo.zip' do
+
+    component.compile
+
+    expect(sandbox + 'bin/startup.sh').to exist
+
+    expect(sandbox + 'pickup/org.eclipse.virgo.apps.splash_3.6.2.RELEASE.jar').not_to exist
+
+    tomcat_server          = sandbox + 'configuration' + 'tomcat-server.xml'
+    expected_tomcat_server = File.new(File.join 'resources', 'virgo', 'configuration', 'tomcat-server.xml')
+    expect(FileUtils.compare_file(expected_tomcat_server, tomcat_server)).to be
+  end
+
+  context do
+    let(:container_libs_dir) { app_dir + '.spring-insight/container-libs' }
 
     before do
-      $stdout = StringIO.new
-      $stderr = StringIO.new
+      FileUtils.mkdir_p container_libs_dir
+      FileUtils.cp_r 'spec/fixtures/framework_spring_insight/.java-buildpack/spring_insight/weaver/insight-weaver-1.2.4-CI-SNAPSHOT.jar',
+                     container_libs_dir
     end
 
-    it 'should detect pickup' do
-      JavaBuildpack::Repository::ConfiguredItem.stub(:find_item) { |&block| block.call(VIRGO_VERSION) if block }
-      .and_return(VIRGO_DETAILS)
-      detected = Virgo.new(
-          app_dir: 'spec/fixtures/container_virgo',
-          application: JavaBuildpack::Application.new('spec/fixtures/container_virgo'),
-          configuration: {}
-      ).detect
+    it 'should fail to link additional libs',
+       app_fixture:   'container_virgo',
+       cache_fixture: 'stub-virgo.zip' do
 
-      expect(detected).to include('virgo=3.6.1_RELEASE')
+      component.compile
+
+      expect(stderr.string).to match /ERROR Virgo does not have a linear application classpath/
     end
 
-    it 'should not detect when pickup is absent' do
-      detected = Virgo.new(
-          app_dir: 'spec/fixtures/container_main',
-          application: JavaBuildpack::Application.new('spec/fixtures/container_main'),
-          configuration: {}
-      ).detect
+  end
 
-      expect(detected).to be_nil
-    end
+  it 'should return command',
+     app_fixture: 'container_virgo' do
 
-    it 'should extract Virgo from a zip' do
-      Dir.mktmpdir do |root|
-        Dir.mkdir File.join(root, 'pickup')
-
-        JavaBuildpack::Repository::ConfiguredItem.stub(:find_item) { |&block| block.call(VIRGO_VERSION) if block }
-        .and_return(VIRGO_DETAILS)
-
-        JavaBuildpack::Util::ApplicationCache.stub(:new).and_return(application_cache)
-        application_cache.stub(:get).with('test-virgo-uri').and_yield(File.open('spec/fixtures/stub-virgo.zip'))
-
-        Virgo.new(
-            app_dir: root,
-            application: JavaBuildpack::Application.new(root),
-            configuration: {}
-        ).compile
-
-        virgo_dir = File.join root, '.virgo'
-
-        startup_script = File.join virgo_dir, 'bin', 'startup.sh'
-        expect(File.exists?(startup_script)).to be_true
-
-        splash_jar = File.join virgo_dir, 'pickup', 'org.eclipse.virgo.apps.splash_3.6.2.RELEASE.jar'
-        expect(File.exists?(splash_jar)).to be_false
-
-        tomcat_server = File.join virgo_dir, 'configuration', 'tomcat-server.xml'
-        expected_tomcat_server = File.new(File.join 'resources', 'virgo', 'configuration', 'tomcat-server.xml')
-        expect(FileUtils.compare_file(expected_tomcat_server, tomcat_server)).to be_true
-      end
-    end
-
-    it 'should fail to link additional libs' do
-      Dir.mktmpdir do |root|
-        lib_directory = File.join(root, '.lib')
-        Dir.mkdir lib_directory
-        Dir.mkdir File.join root, 'pickup'
-        system "cp -r spec/fixtures/framework_spring_insight/.insight/weaver/insight-weaver-1.2.4-CI-SNAPSHOT.jar #{lib_directory}"
-
-        JavaBuildpack::Repository::ConfiguredItem.stub(:find_item) { |&block| block.call(VIRGO_VERSION) if block }
-        .and_return(VIRGO_DETAILS)
-
-        JavaBuildpack::Util::ApplicationCache.stub(:new).and_return(application_cache)
-        application_cache.stub(:get).with('test-virgo-uri').and_yield(File.open('spec/fixtures/stub-virgo.zip'))
-
-        expect do
-          Virgo.new(
-              app_dir: root,
-              application: JavaBuildpack::Application.new(root),
-              configuration: {},
-              lib_directory: lib_directory
-          ).compile
-        end.to raise_error(/Virgo does not have a linear application classpath/)
-      end
-    end
-
-    it 'should return command' do
-      JavaBuildpack::Repository::ConfiguredItem.stub(:find_item) { |&block| block.call(VIRGO_VERSION) if block }
-      .and_return(VIRGO_DETAILS)
-
-      command = Virgo.new(
-          app_dir: 'spec/fixtures/container_virgo',
-          application: JavaBuildpack::Application.new('spec/fixtures/container_virgo'),
-          java_home: 'test-java-home',
-          java_opts: %w(test-opt-2 test-opt-1 -Djava.io.tmpdir=test),
-          configuration: {}
-      ).release
-
-      expect(command).to eq('JAVA_HOME=$PWD/test-java-home JAVA_OPTS="-Dhttp.port=$PORT test-opt-1 test-opt-2" .virgo/bin/startup.sh -clean')
-    end
-
+    expect(component.release).to eq("#{java_home.as_env_var} JAVA_OPTS=\"-Dhttp.port=$PORT test-opt-1 test-opt-2\" " +
+                                        '$PWD/.java-buildpack/virgo/bin/startup.sh -clean')
   end
 
 end

@@ -15,22 +15,22 @@
 # limitations under the License.
 
 require 'fileutils'
-require 'java_buildpack/base_component'
+require 'java_buildpack/component/base_component'
+require 'java_buildpack/component/versioned_dependency_component'
 require 'java_buildpack/container'
-require 'java_buildpack/container/container_utils'
 require 'java_buildpack/repository/configured_item'
 require 'java_buildpack/util/format_duration'
 require 'java_buildpack/util/java_main_utils'
-require 'java_buildpack/util/resource_utils'
-require 'java_buildpack/versioned_dependency_component'
+require 'java_buildpack/logging/logger_factory'
 
 module JavaBuildpack::Container
 
   # Encapsulates the detect, compile, and release functionality for Virgo applications.
-  class Virgo < JavaBuildpack::VersionedDependencyComponent
+  class Virgo < JavaBuildpack::Component::VersionedDependencyComponent
 
     def initialize(context)
-      super('Virgo', context)
+      super(context)
+      @logger = JavaBuildpack::Logging::LoggerFactory.get_logger Virgo
 
       if supports?
         @virgo_version, @virgo_uri = JavaBuildpack::Repository::ConfiguredItem.find_item(@component_name, @configuration)
@@ -46,26 +46,28 @@ module JavaBuildpack::Container
 
     # Creates a droplet from the application.
     def compile
-      download_zip virgo_home
+      download_zip
       clear_pickup
-      JavaBuildpack::Util::ResourceUtils.copy_resources('virgo', virgo_home)
+      @droplet.copy_resources
       link_applications
       link_dependencies
-      link_libs
+
+      fail_to_link_libraries
     end
 
     # Describes how to run the droplet.
     def release
-      @java_opts << "-D#{KEY_HTTP_PORT}=$PORT"
+      @droplet.java_opts.add_system_property KEY_HTTP_PORT, '$PORT'
 
       # Don't override Virgo's temp dir setting
-      @java_opts = @java_opts.select { |opt| opt !~ /-Djava\.io\.tmpdir/ }
+      # FIXME: @droplet.java_opts = @droplet.java_opts.select { |opt| opt !~ /-Djava\.io\.tmpdir/ }
 
-      java_home_string = "JAVA_HOME=$PWD/#{@java_home}"
-      java_opts_string = ContainerUtils.space("JAVA_OPTS=\"#{ContainerUtils.to_java_opts_s(@java_opts)}\"")
-      start_script_string = ContainerUtils.space(@application.relative_path_to(virgo_home + 'bin' + 'startup.sh'))
-
-      "#{java_home_string}#{java_opts_string}#{start_script_string} -clean"
+      [
+          @droplet.java_home.as_env_var,
+          @droplet.java_opts.as_env_var,
+          "$PWD/#{(@droplet.sandbox + 'bin/startup.sh').relative_path_from(@droplet.root)}",
+          '-clean'
+      ].compact.join(' ')
     end
 
     protected
@@ -75,7 +77,7 @@ module JavaBuildpack::Container
     # @param [String] version the version of the dependency
     # @return [String] the unique identifier of the component
     def virgo_id(version)
-      "#{@parsable_component_name}=#{version}"
+      "#{Virgo.to_s.dash_case}=#{version}"
     end
 
     # Whether or not this component supports this application
@@ -102,6 +104,11 @@ module JavaBuildpack::Container
       @application.component_directory 'container-libs'
     end
 
+    def fail_to_link_libraries
+      libs = @droplet.additional_libraries
+      @logger.error { "Virgo does not have a linear application classpath, so libraries #{libs} cannot be linked" } unless libs.empty?
+    end
+
     def link_applications
       application_pickup.children.each { |child| FileUtils.ln_sf child.relative_path_from(pickup), pickup }
     end
@@ -110,16 +117,8 @@ module JavaBuildpack::Container
       application_user_repository.each { |child| FileUtils.ln_sf child.relative_path_from(user_repository), user_repository } if user_repository?
     end
 
-    def link_libs
-      libs = ContainerUtils.libs(@app_dir, @lib_directory)
-
-      if libs && !libs.empty?
-        fail "Virgo does not have a linear application classpath, so libraries #{libs} cannot be linked."
-      end
-    end
-
     def virgo_home
-      @application.component_directory 'virgo'
+      @droplet.sandbox
     end
 
     def virgo_lib
@@ -139,11 +138,11 @@ module JavaBuildpack::Container
     end
 
     def application_pickup
-      @application.child(PICKUP_DIRECTORY)
+      @application.root + PICKUP_DIRECTORY
     end
 
     def application_user_repository
-      @application.child(USER_REPOSITORY_DIRECTORY)
+      @application.root + USER_REPOSITORY_DIRECTORY
     end
 
     def user_repository?
