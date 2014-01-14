@@ -64,7 +64,7 @@ module JavaBuildpack::Container
 
       [
           @droplet.java_home.as_env_var,
-          @droplet.java_opts.as_env_var,
+          @droplet.java_opts.as_env_var.sub(/JAVA_OPTS/, 'JMX_OPTS'), # work around Virgo bug 425655
           "$PWD/#{(@droplet.sandbox + 'bin/startup.sh').relative_path_from(@droplet.root)}",
           '-clean'
       ].compact.join(' ')
