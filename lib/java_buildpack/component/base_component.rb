@@ -17,6 +17,7 @@
 require 'fileutils'
 require 'java_buildpack/component'
 require 'java_buildpack/util/cache/application_cache'
+require 'java_buildpack/util/format_duration'
 require 'java_buildpack/util/shell'
 require 'java_buildpack/util/space_case'
 
@@ -131,7 +132,7 @@ module JavaBuildpack::Component
             Dir.mktmpdir do |root|
               shell "unzip -qq #{file.path} -d #{root} 2>&1"
 
-              FileUtils.rm_r target_directory
+              FileUtils.mkdir_p target_directory.parent
               FileUtils.mv Pathname.new(root).children.first, target_directory
             end
           else

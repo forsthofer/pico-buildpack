@@ -81,7 +81,6 @@ module JavaBuildpack::Component
       @root    = JavaBuildpack::Util::FilteringPathname.new(root,
                                                             ->(path) { !in?(path, buildpack_root) || in?(path, @sandbox) },
                                                             true)
-      FileUtils.mkdir_p @sandbox
     end
 
     # Copy resources from a components resources directory to a directory
@@ -91,6 +90,7 @@ module JavaBuildpack::Component
       resources = RESOURCES_DIRECTORY + @component_id
 
       if resources.exist?
+        FileUtils.mkdir_p target_directory
         FileUtils.cp_r("#{resources}/.", target_directory)
         @logger.debug { "Resources #{resources} found" }
       else
