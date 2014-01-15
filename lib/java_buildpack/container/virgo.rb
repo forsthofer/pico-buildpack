@@ -100,10 +100,6 @@ module JavaBuildpack::Container
       FileUtils.mkdir(pickup)
     end
 
-    def container_libs_directory
-      @application.component_directory 'container-libs'
-    end
-
     def fail_to_link_libraries
       libs = @droplet.additional_libraries
       @logger.error { "Virgo does not have a linear application classpath, so libraries #{libs} cannot be linked" } unless libs.empty?
@@ -114,15 +110,11 @@ module JavaBuildpack::Container
     end
 
     def link_dependencies
-      application_user_repository.each { |child| FileUtils.ln_sf child.relative_path_from(user_repository), user_repository } if user_repository?
+      application_user_repository.children.each { |child| FileUtils.ln_sf child.relative_path_from(user_repository), user_repository } if user_repository?
     end
 
     def virgo_home
       @droplet.sandbox
-    end
-
-    def virgo_lib
-      virgo_home + 'lib'
     end
 
     def user_repository

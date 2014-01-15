@@ -57,6 +57,17 @@ describe JavaBuildpack::Container::Virgo do
     expect(FileUtils.compare_file(expected_tomcat_server, tomcat_server)).to be
   end
 
+  it 'should link repository/usr contents when supplied',
+     app_fixture:   'container_virgo_with_user_repository',
+     cache_fixture: 'stub-virgo.zip' do
+
+    component.compile
+
+    droplet_user_repository = sandbox + 'repository/usr/test.jar'
+    expect(droplet_user_repository).to exist
+    expect(droplet_user_repository).to be_symlink
+  end
+
   context do
     let(:container_libs_dir) { app_dir + '.spring-insight/container-libs' }
 
