@@ -60,11 +60,11 @@ module JavaBuildpack::Container
       @droplet.java_opts.add_system_property KEY_HTTP_PORT, '$PORT'
 
       # Don't override Virgo's temp dir setting
-      # FIXME: @droplet.java_opts = @droplet.java_opts.select { |opt| opt !~ /-Djava\.io\.tmpdir/ }
+      fixed_java_opts = @droplet.java_opts.select { |opt| opt !~ /-Djava\.io\.tmpdir/ }
 
       [
           @droplet.java_home.as_env_var,
-          @droplet.java_opts.as_env_var.sub(/JAVA_OPTS/, 'JMX_OPTS'), # work around Virgo bug 425655
+          fixed_java_opts.as_env_var.sub(/JAVA_OPTS/, 'JMX_OPTS'), # work around Virgo bug 425655
           "$PWD/#{(@droplet.sandbox + 'bin/startup.sh').relative_path_from(@droplet.root)}",
           '-clean'
       ].compact.join(' ')
