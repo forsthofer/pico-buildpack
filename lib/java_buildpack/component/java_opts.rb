@@ -77,7 +77,7 @@ module JavaBuildpack::Component
     def select(*several_variants)
       result_array = super
       result = JavaOpts.new @droplet_root
-      self.each { |i| result << i }
+      result_array.each { |i| result << i }
       result
     end
 

@@ -80,7 +80,7 @@ describe JavaBuildpack::Container::Virgo do
   it 'should return command',
      app_fixture: 'container_virgo' do
 
-    #expect(component.release).to eq("#{java_home.as_env_var} JAVA_OPTS=\"-Dhttp.port=$PORT test-opt-1 test-opt-2\" " +
+    # expect(component.release).to eq("#{java_home.as_env_var} JAVA_OPTS=\"-Dhttp.port=$PORT test-opt-1 test-opt-2\" " +
     #                                    '$PWD/.java-buildpack/virgo/bin/startup.sh -clean')
     # Work around Virgo bug 425655
     expect(component.release).to eq("#{java_home.as_env_var} JMX_OPTS=\"-Dhttp.port=$PORT test-opt-1 test-opt-2\" " +
