@@ -73,14 +73,6 @@ module JavaBuildpack::Component
       "JAVA_OPTS=\"#{sort.join(' ')}\""
     end
 
-    # Overrides select to return an instance of JavaOpts rather than a raw array.
-    def select(*several_variants)
-      result_array = super
-      result = JavaOpts.new @droplet_root
-      result_array.each { |i| result << i }
-      result
-    end
-
     private
 
     def qualify_value(value)
