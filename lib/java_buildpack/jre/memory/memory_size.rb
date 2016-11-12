@@ -77,7 +77,9 @@ module JavaBuildpack::Jre
     # @param [MemorySize, 0] other
     # @return [Numeric] the result
     def <=>(other)
-      if other == 0
+      if other == nil
+        @bytes <=> 0
+      elsif other == 0
         @bytes <=> 0
       else
         fail "Cannot compare a MemorySize to an instance of #{other.class}" unless other.is_a? MemorySize
