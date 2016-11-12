@@ -16,5 +16,4 @@
 # Configuration for the Virgo container
 ---
 version: 3.6.+
-#repository_root: "http://virgo.eclipse.org.s3.amazonaws.com"
-repository_root: https://nexus.wdf.sap.corp:8443/nexus/service/local/repositories/deploy.milestones/content/com/sap/esb/distribution/bsn-linux/
+repository_root: "http://virgo.eclipse.org.s3.amazonaws.com"
